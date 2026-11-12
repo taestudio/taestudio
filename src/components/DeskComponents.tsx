@@ -4,10 +4,12 @@ import { Copy, Check, Bookmark, ArrowLeft, ArrowRight, Trash2 } from 'lucide-rea
 import { GoldDivider, Loader } from '../components/ui'
 import { ENGINES, type Engine, type EngineId } from '../data/engines'
 import { supabase } from '../lib/supabase'
+import { getRecaptchaToken } from '../lib/recaptcha'
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 
 async function callGenerateStrategy(engine: Engine, userMessage: string, sessionId: string, userKey: string): Promise<string> {
+  const recaptchaToken = await getRecaptchaToken('generate_strategy')
   const res = await fetch(`${SUPABASE_URL}/functions/v1/generate-strategy`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -16,6 +18,7 @@ async function callGenerateStrategy(engine: Engine, userMessage: string, session
       user_message: userMessage,
       session_id: sessionId,
       user_key: userKey,
+      recaptcha_token: recaptchaToken,
     }),
   })
   const data = await res.json()
@@ -300,10 +303,11 @@ export function EmailGate({ onUnlock }: EmailGateProps) {
     if (!valid || loading) return
     setLoading(true)
     try {
+      const recaptchaToken = await getRecaptchaToken('capture_lead')
       await fetch(`${SUPABASE_URL}/functions/v1/capture-lead`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'email-gate', consent }),
+        body: JSON.stringify({ email, source: 'email-gate', consent, recaptcha_token: recaptchaToken }),
       })
     } catch (_) {}
     onUnlock(email)

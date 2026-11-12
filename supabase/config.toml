@@ -1,0 +1,25 @@
+project_id = "taestudio-ai"
+
+[functions.capture-lead]
+verify_jwt = false
+
+[functions.generate-strategy]
+verify_jwt = true
+
+[functions.recover-download]
+verify_jwt = false
+
+[functions.send-alignment-guide]
+verify_jwt = false
+
+[functions.send-contact]
+verify_jwt = false
+
+[functions.stripe-checkout]
+verify_jwt = false
+
+[functions.stripe-webhook]
+verify_jwt = false
+
+[functions.verify-desk-access]
+verify_jwt = false

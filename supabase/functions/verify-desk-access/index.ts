@@ -1,5 +1,6 @@
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2.49.1';
+import { verifyRecaptcha, recaptchaErrorResponse } from './recaptcha.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -25,7 +26,14 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { email, checkout_session_id } = await req.json();
+    const { email, checkout_session_id, recaptcha_token } = await req.json();
+
+    // Only verify captcha for email-based restore (the attack surface); the
+    // post-checkout session-id mode can't be spammed meaningfully.
+    if (!checkout_session_id) {
+      const recaptcha = await verifyRecaptcha(recaptcha_token, 'verify-desk-access');
+      if (!recaptcha.ok) return recaptchaErrorResponse();
+    }
 
     // Mode 1: verify by checkout session ID (used after Stripe checkout redirect)
     if (checkout_session_id && typeof checkout_session_id === 'string') {

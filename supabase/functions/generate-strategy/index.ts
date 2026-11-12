@@ -1,5 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { verifyRecaptcha, recaptchaErrorResponse } from "./recaptcha.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -143,7 +144,10 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { engine_id, user_message, session_id, user_key } = await req.json();
+    const { engine_id, user_message, session_id, user_key, recaptcha_token } = await req.json();
+
+    const recaptcha = await verifyRecaptcha(recaptcha_token, "generate-strategy");
+    if (!recaptcha.ok) return recaptchaErrorResponse();
 
     if (!engine_id || !user_message) {
       return new Response(

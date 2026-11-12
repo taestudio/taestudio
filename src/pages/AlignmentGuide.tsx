@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Check, ArrowRight } from 'lucide-react'
 import { FadeUp, GoldDivider, GlowOrb, SectionLabel, GoldButton } from '../components/ui'
+import { getRecaptchaToken } from '../lib/recaptcha'
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 
@@ -30,11 +31,13 @@ export default function AlignmentGuide() {
     if (!valid || state === 'loading') return
     setState('loading')
     try {
-      await fetch(`${SUPABASE_URL}/functions/v1/send-alignment-guide`, {
+      const recaptchaToken = await getRecaptchaToken('alignment_guide')
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/send-alignment-guide`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'alignment-guide', consent }),
+        body: JSON.stringify({ email, source: 'alignment-guide', consent, recaptcha_token: recaptchaToken }),
       })
+      if (!res.ok) throw new Error('Request failed')
       setState('success')
     } catch (_) {
       setState('error')

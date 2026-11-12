@@ -1,5 +1,6 @@
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2.49.1';
+import { verifyRecaptcha, recaptchaErrorResponse } from './recaptcha.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -25,7 +26,10 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { email, slug } = await req.json();
+    const { email, slug, recaptcha_token } = await req.json();
+
+    const recaptcha = await verifyRecaptcha(recaptcha_token, 'recover-download');
+    if (!recaptcha.ok) return recaptchaErrorResponse();
 
     if (!email || typeof email !== 'string') {
       return new Response(JSON.stringify({ error: 'Email required' }), {

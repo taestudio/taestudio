@@ -1,5 +1,6 @@
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
 import Stripe from 'npm:stripe@17.7.0';
+import { verifyRecaptcha, recaptchaErrorResponse } from './recaptcha.ts';
 
 const stripeSecret = Deno.env.get('STRIPE_SECRET_KEY')!;
 const stripe = new Stripe(stripeSecret, {
@@ -62,7 +63,10 @@ Deno.serve(async (req) => {
       return corsResponse({ error: 'Method not allowed' }, 405);
     }
 
-    const { price_id, success_url, cancel_url, product_slug } = await req.json();
+    const { price_id, success_url, cancel_url, product_slug, recaptcha_token } = await req.json();
+
+    const recaptcha = await verifyRecaptcha(recaptcha_token, 'stripe-checkout');
+    if (!recaptcha.ok) return recaptchaErrorResponse();
 
     if (!price_id || typeof price_id !== 'string') {
       return corsResponse({ error: 'Missing or invalid price_id' }, 400);
