@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
+import { initRecaptcha } from './lib/recaptcha'
+import ConsentBanner from './components/ConsentBanner'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
@@ -37,9 +39,11 @@ function Layout({ children, showNav = true }: { children: React.ReactNode; showN
 }
 
 export default function App() {
+  useEffect(() => { initRecaptcha() }, [])
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <ConsentBanner />
       <Routes>
         {/* Marketing site */}
         <Route path="/" element={<Layout><Home /></Layout>} />

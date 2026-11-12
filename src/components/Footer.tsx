@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
 import { GoldDivider } from './ui'
+import { getConsent, setConsent } from '../lib/recaptcha'
 
 export default function Footer() {
+  const openCookieSettings = () => setConsent(getConsent() === 'accepted' ? 'declined' : 'accepted')
   return (
     <footer className="bg-plum-950 border-t border-white/[0.05] py-14 px-5">
       <div className="max-w-6xl mx-auto">
@@ -72,7 +74,14 @@ export default function Footer() {
   </p>
 
   <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-5">
-    <div className="flex items-center justify-center gap-5">
+    <div className="flex flex-wrap items-center justify-center gap-5">
+      <button
+        onClick={openCookieSettings}
+        className="font-sans text-xs text-ink-dim hover:text-ink-soft transition-colors bg-transparent border-none cursor-pointer p-0"
+      >
+        Cookie Settings
+      </button>
+
       <Link
         to="/privacy-policy"
         className="font-sans text-xs text-ink-dim hover:text-ink-soft transition-colors"
@@ -100,6 +109,28 @@ export default function Footer() {
     </a>
   </div>
 </div>
+
+        <p className="font-sans text-[11px] text-ink-dim leading-relaxed text-center md:text-left mt-6">
+          This site is protected by reCAPTCHA. Google's{' '}
+          <a
+            href="https://policies.google.com/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-ink-dim underline underline-offset-2 hover:text-ink-soft transition-colors"
+          >
+            Privacy Policy
+          </a>{' '}
+          and{' '}
+          <a
+            href="https://policies.google.com/terms"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-ink-dim underline underline-offset-2 hover:text-ink-soft transition-colors"
+          >
+            Terms of Use
+          </a>{' '}
+          apply.
+        </p>
       </div>
     </footer>
   )

@@ -1,5 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { verifyRecaptcha, recaptchaErrorResponse } from "./recaptcha.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -67,7 +68,10 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const { email, source, consent } = await req.json();
+    const { email, source, consent, recaptcha_token } = await req.json();
+
+    const recaptcha = await verifyRecaptcha(recaptcha_token, "capture-lead");
+    if (!recaptcha.ok) return recaptchaErrorResponse();
 
     if (!email || typeof email !== "string" || !EMAIL_REGEX.test(email.trim())) {
       return new Response(

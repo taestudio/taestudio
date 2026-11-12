@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { FadeUp, GlowOrb, SectionLabel, GoldButton, GoldDivider } from '../components/ui'
+import { getRecaptchaToken } from '../lib/recaptcha'
 
 type FormState = 'idle' | 'loading' | 'success' | 'error'
 
@@ -15,19 +16,32 @@ export default function Contact() {
     setState('loading')
     setError('')
     try {
+      const recaptchaToken = await getRecaptchaToken('contact')
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
         },
-        body: JSON.stringify({ name: form.name.trim(), email: form.email.trim(), message: form.message.trim() }),
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          message: form.message.trim(),
+          recaptcha_token: recaptchaToken,
+        }),
       })
-      if (!res.ok) throw new Error('Request failed')
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error ?? 'Request failed')
       setState('success')
-    } catch {
+    } catch (err) {
       setState('error')
-      setError('Something went wrong. Please try again or email directly.')
+      setError(
+        err instanceof Error && err.message === 'Too many requests. Please try again later.'
+          ? err.message
+          : err instanceof Error && err.message !== 'Request failed'
+            ? err.message
+            : 'Something went wrong. Please try again or email directly.',
+      )
     }
   }
 

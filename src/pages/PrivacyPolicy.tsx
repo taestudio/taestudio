@@ -20,7 +20,10 @@ const SECTIONS = [
       },
       {
         label: 'Information Collected Automatically',
-        items: ['Usage data — general interaction data. We do not use cookies or cross-site tracking.'],
+        items: [
+          'Usage data — general interaction data collected through cookies and, where enabled, analytics tools',
+          'Anti-spam data — when Google reCAPTCHA runs, Google collects device and interaction data to verify you are human',
+        ],
       },
       {
         label: 'Information We Do Not Collect',
@@ -30,61 +33,68 @@ const SECTIONS = [
   },
   {
     num: '3',
+    title: 'Cookies, Analytics & reCAPTCHA',
+    content: `On your first visit we ask for your consent before loading cookies for analytics and Google reCAPTCHA. If you decline, forms on this site still work — they are protected by rate limiting alone. If you accept, reCAPTCHA v3 runs invisibly in the background to protect our forms from spam and abuse, and Google collects information such as device data and interactions with the site. You can change your choice at any time via the "Cookie Settings" link in the footer.`,
+  },
+  {
+    num: '4',
     title: 'How We Use Your Information',
     items: [
       'Provide access to the Soft Strategy Desk™ and its four engines',
       'Send emails about content, offers, and updates from Tae Studio',
       'Improve the Tool based on general usage patterns',
+      'Protect the site from spam and abuse',
       'Comply with applicable laws',
     ],
     note: 'We do not sell your data, build advertising profiles, or train AI models on your inputs.',
   },
   {
-    num: '4',
+    num: '5',
     title: 'AI-Generated Content Disclosure',
     content: `The Soft Strategy Desk™ uses Claude (Anthropic) to generate responses. Your inputs are processed by Anthropic's API per their Privacy Policy at anthropic.com/privacy. Outputs are for informational purposes only — not legal, financial, or mental health advice.`,
   },
   {
-    num: '5',
+    num: '6',
     title: 'Email Communications',
     content: `By submitting your email you opt in to receive communications from Tae Studio. Unsubscribe anytime via the link in any email. We use Stan Store to manage communications.`,
   },
   {
-    num: '6',
+    num: '7',
     title: 'Data Sharing',
-    content: `We do not sell your data. We may share with: Anthropic (API processing), Stan Store (email and sales), and legal authorities if required by law.`,
+    content: `We do not sell your data. We may share with: Anthropic (API processing), Stan Store (email and sales), Google (reCAPTCHA spam protection), and legal authorities if required by law.`,
   },
   {
-    num: '7',
+    num: '8',
     title: 'Data Retention',
     items: [
       'Email addresses: retained until you unsubscribe or request deletion',
       'Tool inputs: processed in real-time, not stored beyond the active session',
       'Saved outputs: browser session only, clear when tab closes',
+      'Your cookie consent choice: stored on your device until you clear it',
     ],
   },
   {
-    num: '8',
+    num: '9',
     title: 'Your Rights',
     content: `You may access, correct, delete, or port your data, and opt out of marketing at any time. Contact tadams0622@icloud.com. We respond within 30 days.`,
   },
   {
-    num: '9',
+    num: '10',
     title: "Children's Privacy",
     content: `This Tool is for users 18 and older. We do not knowingly collect data from children under 13.`,
   },
   {
-    num: '10',
+    num: '11',
     title: 'Security',
     content: `We take reasonable measures to protect your information. No internet transmission is 100% secure.`,
   },
   {
-    num: '11',
+    num: '12',
     title: 'Changes',
     content: `We may update this policy from time to time. Continued use after changes constitutes acceptance.`,
   },
   {
-    num: '12',
+    num: '13',
     title: 'Contact',
     content: `Tae Studio · tadams0622@icloud.com · Delaware`,
   },
@@ -105,7 +115,7 @@ export default function PrivacyPolicy() {
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-1">
               {[
                 'Effective: May 1, 2026',
-                'Updated: May 1, 2026',
+                'Updated: November 12, 2026',
                 'Tae Studio · Delaware',
               ].map(m => (
                 <span key={m} className="font-sans text-xs text-ink-dim">{m}</span>
@@ -173,7 +183,7 @@ export default function PrivacyPolicy() {
           </div>
 
           <GoldDivider className="mt-14 mb-8" />
-          <p className="font-sans text-xs text-ink-dim text-center">Last updated: May 1, 2026</p>
+          <p className="font-sans text-xs text-ink-dim text-center">Last updated: November 12, 2026</p>
         </div>
       </section>
     </main>

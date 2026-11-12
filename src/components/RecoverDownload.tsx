@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Loader2, Download, Mail } from 'lucide-react'
+import { getRecaptchaToken } from '../lib/recaptcha'
 
 type Status = 'idle' | 'loading' | 'found' | 'not-found' | 'error'
 
@@ -18,12 +19,13 @@ export function RecoverDownload({
     if (!email.trim()) return
     setStatus('loading')
     try {
+      const recaptchaToken = await getRecaptchaToken('recover_download')
       const res = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/recover-download`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, slug }),
+          body: JSON.stringify({ email, slug, recaptcha_token: recaptchaToken }),
         },
       )
       const data = await res.json()
