@@ -1,0 +1,14 @@
+{
+  "name": "Tae Studio",
+  "short_name": "Soft Strategy Desk",
+  "description": "AI-powered strategy for ambitious women",
+  "start_url": "/desk",
+  "display": "standalone",
+  "background_color": "#14061F",
+  "theme_color": "#14061F",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
